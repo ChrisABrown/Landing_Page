@@ -1,6 +1,13 @@
 {
+  "name": "landing_page",
+  "version": "1.0.0",
+  "description": "Project 4 of Udacity Projects",
+  "main": "index.html",
   "dependencies": {
     "eslint": "^8.49.0",
-    "liveserver": "^0.1.20"
+    "live-server": "^0.1.20"
+  },
+  "scripts": {
+    "live": "live-server"
   }
 }
