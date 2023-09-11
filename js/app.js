@@ -22,42 +22,12 @@
  * Define Global Variables
  *
  */
-const navbar = document.getElementById('navbar__list')
-
-const mainHeader = document.getElementById('main-heading')
-
-const headerRegions = document.getElementsByTagName('header')
-
-const sections = document.getElementsByTagName('section')
-
-const footer = document.getElementsByTagName('footer')
 
 /**
  * End Global Variables
  * Start Helper Functions
  *
  */
-const addNav = () => {
-  const frag = document.createDocumentFragment()
-  frag.appendChild(navbar)
-  for (header of headerRegions) {
-    if (header.className === 'page__header') {
-      const nav = header.firstElementChild
-      nav.appendChild(frag)
-    }
-  }
-  document.appendChild(frag)
-}
-
-const addSections = (num) => {
-  for (let i = 1; i <= num; i++) {
-    const section = document.createElement('li')
-    navbar.appendChild(section)
-    section.textContent = `Section ${i}`
-    section.style.color = 'blue'
-    section.className = 'navbar navbar-items'
-  }
-}
 
 /**
  * End Helper Functions
@@ -66,11 +36,6 @@ const addSections = (num) => {
  */
 
 // build the nav
-const buildNav = () => {
-  addNav()
-  addSections(3)
-}
-buildNav()
 
 // Add class 'active' to section when near top of viewport
 

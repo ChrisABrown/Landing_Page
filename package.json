@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "eslint": "^8.49.0",
+    "liveserver": "^0.1.20"
+  }
+}
