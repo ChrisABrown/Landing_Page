@@ -5,7 +5,7 @@
   "main": "index.html",
   "dependencies": {
     "eslint": "^8.49.0",
-    "live-server": "^0.1.20"
+    "live-server": ""
   },
   "scripts": {
     "live": "live-server"
