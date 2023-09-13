@@ -39,7 +39,15 @@ function createTabs(num) {
   return tabs
 }
 
-function addSection(num) {}
+function addSection(num) {
+  let lastChild = document.getElementById('section3')
+  // let sections = document.getElementsByTagName('section')
+  for (let i = 0; i < num; i++) {
+    let section = document.createElement('section')
+    section.innerHTML = `<div class='landing__container'><h2>Section ${i}</h2></div>`
+    lastChild.insertAdjacentElement('afterend', section)
+  }
+}
 
 function buildNav() {
   let nav = document.querySelector('#navbar__list')
@@ -65,7 +73,9 @@ function switchClass() {
  */
 
 // build the nav
-document.addEventListener('DOMContentLoaded', createTabs())
+document.addEventListener('DOMContentLoaded', addSection(2))
+document.addEventListener('DOMContentLoaded', createTabs(5))
+document.addEventListener('DOMContentLoaded', buildNav())
 // Add class 'active' to section when near top of viewport
 
 // Scroll to anchor ID using scrollTO event
