@@ -72,12 +72,18 @@ function createObserver() {
     threshold: 0.5,
   }
   let target = 'landing__container'
+  function switchClass() {
+    let sections = document.getElementsByTagName('section')
+    for (const section of sections) {
+      if (!section.classList.includes(ACTIVE_CLASS)) {
+        section.classList.toggle(ACTIVE_CLASS)
+      }
+    }
+  }
   const intersectCallback = (entries, observer) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
-        entry.target.classList.toggle(ACTIVE_CLASS)
-      } else {
-        entry.target.classList.remove(ACTIVE_CLASS)
+        switchClass()
       }
     })
   }
@@ -90,8 +96,18 @@ function createObserver() {
   })
 }
 
-function switchClass() {
-  if(se)
+function scrollToView() {
+  window.scrollTo({})
+}
+
+function addScrollTopButton() {
+  let footer = document.querySelector('.page__footer')
+  const button = document.createElement('button')
+  button.style.cssText =
+    'position: absolute; background-color: #b8e47f; color: #fff; border-radius: 20px'
+  button.textContent = 'Scroll to Top'
+
+  footer.insertAdjacentElement('beforeend', button)
 }
 
 /**
@@ -99,12 +115,15 @@ function switchClass() {
  * Begin Main Functions
  *
  */
+//Add extra section to bottom of the page
+document.addEventListener('DOMContentLoaded', addSection(1))
 
 // build the nav
-document.addEventListener('DOMContentLoaded', addSection(1))
 document.addEventListener('DOMContentLoaded', buildNav())
+document.addEventListener('DOMContentLoaded', addScrollTopButton())
+
 // Add class 'active' to section when near top of viewport
-document.addEventListener('DOMContentLoaded', switchClass())
+document.addEventListener('onscroll', switchClass())
 
 // Scroll to anchor ID using scrollTO event
 
