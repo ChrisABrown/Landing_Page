@@ -37,7 +37,7 @@ function createTabs() {
   let tabs = []
   for (let i = 0; i < sections.length; i++) {
     let item = document.createElement('li')
-    item.className = 'menu__link'
+    item.classList.add('menu__link')
     item.textContent = sections[i].dataset.nav
     tabs.push(item)
   }
@@ -66,13 +66,32 @@ function buildNav() {
   })
 }
 
-function switchClass() {
-  let observer = new IntersectionObserver()
-  let options = document.getElementsByTagName('section').classList
-  if (options.include(ACTIVE_CLASS)) {
-    isActive = true
+function createObserver() {
+  let options = {
+    rootMargin: '0px',
+    threshold: 0.5,
   }
-  isActive = false
+  let target = 'landing__container'
+  const intersectCallback = (entries, observer) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.toggle(ACTIVE_CLASS)
+      } else {
+        entry.target.classList.remove(ACTIVE_CLASS)
+      }
+    })
+  }
+  let observer = new IntersectionObserver(intersectCallback, options)
+
+  document.querySelectorAll(target).forEach((x) => {
+    if (x) {
+      observer.observe(x)
+    }
+  })
+}
+
+function switchClass() {
+  if(se)
 }
 
 /**
@@ -83,9 +102,9 @@ function switchClass() {
 
 // build the nav
 document.addEventListener('DOMContentLoaded', addSection(1))
-document.addEventListener('DOMContentLoaded', createTabs())
 document.addEventListener('DOMContentLoaded', buildNav())
 // Add class 'active' to section when near top of viewport
+document.addEventListener('DOMContentLoaded', switchClass())
 
 // Scroll to anchor ID using scrollTO event
 
@@ -100,3 +119,11 @@ document.addEventListener('DOMContentLoaded', buildNav())
 // Scroll to section on link click
 
 // Set sections as active
+window.addEventListener(
+  'load',
+  (e) => {
+    bodyEL = document.querySelector('#scroll__area')
+    createObserver()
+  },
+  false
+)
