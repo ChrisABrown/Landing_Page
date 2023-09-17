@@ -57,11 +57,7 @@ function addSection(num) {
 }
 
 const scrollToSection = (element) => {
-  element.scrollIntoView({
-    block: 'start',
-    behavior: 'smooth',
-    inline: 'start',
-  })
+  element.scrollIntoView({})
 }
 
 //Uses createTab functions returned array of tabs to then add tabs to the page
@@ -69,16 +65,17 @@ function buildNav() {
   let nav = document.querySelector('#navbar__list')
   let sections = document.querySelectorAll('section')
   let tabs = createTabs(sections.length)
-  for (let i = 0; i < tabs.length; i++) {
-    tabs[i].setAttribute('onclick', scrollToSection(sections[i]))
-    nav.appendChild(tabs[i])
-  }
-  nav.addEventListener('click', () => {
-    tabs.forEach((element) => {
-      element.setAttribute('onclick', scrollToSection(element))
-    })
+  tabs.forEach((element) => nav.appendChild(element))
+  nav.addEventListener('click', (e) => {
+    for (let i = 0; i <= sections.length; i++) {
+      let choice = document.getElementById()
+      sections[i].scrollIntoView({
+        block: 'start',
+        behavior: 'smooth',
+        inline: 'start',
+      })
+    }
   })
-  nav.appendChild(tabs)
 }
 
 function createObserver() {
