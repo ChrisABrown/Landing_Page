@@ -44,7 +44,7 @@ function createTabs() {
   return tabs
 }
 
-//Not very dynamic for adding a section with different html or anything else but it gets the job done
+//adds section based off num parameter, sets attributes for section and fills it with dummy text
 function addSection(num) {
   let lastChild = document.getElementById('section3')
   for (let i = 0; i < num; i++) {
@@ -56,56 +56,63 @@ function addSection(num) {
   }
 }
 
-const scrollToSection = (element) => {
-  element.scrollIntoView({})
-}
-
-//Uses createTab functions returned array of tabs to then add tabs to the page
+//Uses createTabs functions' returned array of tabs to then add tabs to the page dependent on the number of sections on the page
 function buildNav() {
   let nav = document.querySelector('#navbar__list')
   let sections = document.querySelectorAll('section')
   let tabs = createTabs(sections.length)
   tabs.forEach((element) => nav.appendChild(element))
+}
+
+//adds event listener to navbar that listens for a click, then scrolls to the section based of the sections' data-nav matching the text content of the tab
+function sectionScroll() {
+  let nav = document.querySelector('#navbar__list')
+  let sections = document.getElementsByTagName('section')
+
   nav.addEventListener('click', (e) => {
-    for (let i = 0; i <= sections.length; i++) {
-      let choice = document.getElementById()
-      sections[i].scrollIntoView({
-        block: 'start',
-        behavior: 'smooth',
-        inline: 'start',
-      })
+    for (let i = 0; i < nav.children.length; i++) {
+      let choice = e.target.textContent
+      let id = sections[i].getAttribute('id')
+      if (choice === sections[i].dataset.nav) {
+        let section = document.getElementById(id)
+        section.scrollIntoView({
+          block: 'start',
+          behavior: 'smooth',
+          inline: 'start',
+        })
+      }
     }
   })
 }
 
-function createObserver() {
-  let options = {
-    rootMargin: '0px',
-    threshold: 0.5,
-  }
-  let target = 'landing__container'
-  function switchClass() {
-    let sections = document.getElementsByTagName('section')
-    for (const section of sections) {
-      if (!section.classList.includes(ACTIVE_CLASS)) {
-        section.classList.toggle(ACTIVE_CLASS)
-      }
-    }
-  }
-  const intersectCallback = (entries, observer) => {
+function sectionClassChange() {
+  const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        switchClass()
-      }
+      const intersecting = entry.isIntersecting
+      intersecting
+        ? entry.target.classList.add(ACTIVE_CLASS)
+        : entry.target.classList.remove(ACTIVE_CLASS)
     })
-  }
-  let observer = new IntersectionObserver(intersectCallback, options)
-
-  document.querySelectorAll(target).forEach((x) => {
-    if (x) {
-      observer.observe(x)
-    }
   })
+  document.querySelectorAll('section').forEach((section) => {
+    observer.observe(section)
+  })
+}
+
+function tabClassChange() {
+  let nav = document.querySelector('#navbar__list')
+  let sections = document.querySelectorAll('section')
+  console.log(nav.children)
+
+  for (let i = 0; i < sections.length; i++) {
+    let classlist = sections[i].classList
+    let tabs = nav.children
+    if (classlist.contains(ACTIVE_CLASS)) {
+      tabs[i].classList.add(ACTIVE_CLASS)
+    } else {
+      tabs[i].classList.remove(ACTIVE_CLASS)
+    }
+  }
 }
 
 function addScrollTopButton() {
@@ -139,9 +146,12 @@ document.addEventListener('DOMContentLoaded', buildNav())
 document.addEventListener('DOMContentLoaded', addScrollTopButton())
 
 // Add class 'active' to section when near top of viewport
-// document.addEventListener('onscroll', switchClass())
+document.addEventListener('scroll', sectionClassChange())
 
-// Scroll to anchor ID using scrollTO event
+// Scroll to anchor ID using scrollIntoView
+document.addEventListener('click', sectionScroll())
+
+tabClassChange()
 
 /**
  * End Main Functions
@@ -154,11 +164,3 @@ document.addEventListener('DOMContentLoaded', addScrollTopButton())
 // Scroll to section on link click
 
 // Set sections as active
-window.addEventListener(
-  'load',
-  (e) => {
-    bodyEL = document.querySelector('#scroll__area')
-    createObserver()
-  },
-  false
-)
