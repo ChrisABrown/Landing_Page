@@ -92,6 +92,23 @@ section {
   transition: ease 0.3s all;
 }
 
+.btn {
+  font-size: 1em;
+  position: absolute;
+  right: 10px;
+  background-color: #36c97f;
+  color: #fff;
+  border-color: antiquewhite;
+  border-radius: 20px;
+  min-height: 30px;
+  min-width: 120px;
+}
+.btn:hover {
+  background: rgb(49, 124, 189);
+  color: #333;
+  transition: ease 0.7s all;
+}
+
 /* Header Styles */
 .page__header {
   background: #fff;

@@ -56,14 +56,29 @@ function addSection(num) {
   }
 }
 
+const scrollToSection = (element) => {
+  element.scrollIntoView({
+    block: 'start',
+    behavior: 'smooth',
+    inline: 'start',
+  })
+}
+
 //Uses createTab functions returned array of tabs to then add tabs to the page
 function buildNav() {
   let nav = document.querySelector('#navbar__list')
   let sections = document.querySelectorAll('section')
   let tabs = createTabs(sections.length)
-  tabs.forEach((element) => {
-    nav.appendChild(element)
+  for (let i = 0; i < tabs.length; i++) {
+    tabs[i].setAttribute('onclick', scrollToSection(sections[i]))
+    nav.appendChild(tabs[i])
+  }
+  nav.addEventListener('click', () => {
+    tabs.forEach((element) => {
+      element.setAttribute('onclick', scrollToSection(element))
+    })
   })
+  nav.appendChild(tabs)
 }
 
 function createObserver() {
@@ -96,18 +111,22 @@ function createObserver() {
   })
 }
 
-function scrollToView() {
-  window.scrollTo({})
-}
-
 function addScrollTopButton() {
   let footer = document.querySelector('.page__footer')
   const button = document.createElement('button')
-  button.style.cssText =
-    'position: absolute; background-color: #b8e47f; color: #fff; border-radius: 20px'
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'smooth',
+    })
+  }
+  button.addEventListener('click', () => {
+    button.setAttribute('onclick', scrollToTop())
+  })
   button.textContent = 'Scroll to Top'
-
-  footer.insertAdjacentElement('beforeend', button)
+  button.classList.add('btn')
+  footer.insertAdjacentElement('beforebegin', button)
 }
 
 /**
@@ -123,7 +142,7 @@ document.addEventListener('DOMContentLoaded', buildNav())
 document.addEventListener('DOMContentLoaded', addScrollTopButton())
 
 // Add class 'active' to section when near top of viewport
-document.addEventListener('onscroll', switchClass())
+// document.addEventListener('onscroll', switchClass())
 
 // Scroll to anchor ID using scrollTO event
 
