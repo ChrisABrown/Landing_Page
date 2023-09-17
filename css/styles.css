@@ -100,6 +100,9 @@ section {
 }
 
 .btn {
+  opacity: 0;
+  transform: translateY(100px);
+  transition: all 0.8s ease;
   font-size: 1em;
   position: absolute;
   right: 10px;
@@ -110,10 +113,24 @@ section {
   min-height: 30px;
   min-width: 120px;
 }
+
+.showBtn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .btn:hover {
   background: rgb(49, 124, 189);
   color: #333;
   transition: ease 0.7s all;
+}
+/* Bonus Section styling */
+section.hide-left {
+  opacity: 0;
+  transform: translateX(-100);
+}
+section.hide-right {
+  opacity: 0;
 }
 
 /* Header Styles */
@@ -238,6 +255,7 @@ section.your-active-class {
     rgba(0, 0, 0, 0.1) 0%,
     rgba(0, 0, 0, 0) 100%
   );
+  border-radius: 20px;
 }
 
 section.your-active-class .landing__container::before {

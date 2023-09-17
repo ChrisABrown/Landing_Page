@@ -85,6 +85,7 @@ function sectionScroll() {
   })
 }
 
+//adds and removes the ACTIVE_CLASS variable from a section dependent on whether sections is intersecting with viewport or not
 function sectionClassChange() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -102,21 +103,54 @@ function sectionClassChange() {
 function tabClassChange() {
   let nav = document.querySelector('#navbar__list')
   let sections = document.querySelectorAll('section')
-  console.log(nav.children)
-
-  for (let i = 0; i < sections.length; i++) {
-    let classlist = sections[i].classList
-    let tabs = nav.children
-    if (classlist.contains(ACTIVE_CLASS)) {
-      tabs[i].classList.add(ACTIVE_CLASS)
-    } else {
-      tabs[i].classList.remove(ACTIVE_CLASS)
-    }
-  }
 }
 
+//Bonus: hide sections until intersection
+function hideSections() {
+  document.querySelectorAll('section').forEach((el, index) => {
+    console.log(el)
+    switch (index) {
+      case 0:
+      case 2:
+        el.classList.add('hide-left')
+        break
+      case 1:
+      case 3:
+        el.classList.add('hide-right')
+        break
+      default:
+        el.classList.add('hide-right')
+    }
+  })
+}
+
+//hides the scroll to top button until a threshold is reached on the footer in relation to the viewport
+function handleScroll() {
+  let footer = document.querySelector('footer')
+  let btn = document.querySelector('.btn')
+  let options = {
+    threshold: 0.8,
+  }
+
+  const callback = (entries, observer) => {
+    entries.forEach((entry) => {
+      let intersecting = entry.isIntersecting
+      if (intersecting) {
+        btn.classList.add('showBtn')
+      } else {
+        btn.classList.remove('showBtn')
+      }
+    })
+  }
+
+  let observer = new IntersectionObserver(callback, options)
+  observer.observe(footer)
+}
+
+//builds button for scrolling to the top of the screen and adds it to the footer
 function addScrollTopButton() {
   let footer = document.querySelector('.page__footer')
+  let list = ['btn', 'showBtn']
   const button = document.createElement('button')
   const scrollToTop = () => {
     window.scrollTo({
@@ -129,8 +163,8 @@ function addScrollTopButton() {
     button.setAttribute('onclick', scrollToTop())
   })
   button.textContent = 'Scroll to Top'
-  button.classList.add('btn')
-  footer.insertAdjacentElement('beforebegin', button)
+  button.classList.add(...list)
+  footer.insertAdjacentElement('beforeend', button)
 }
 
 /**
@@ -144,6 +178,7 @@ document.addEventListener('DOMContentLoaded', addSection(1))
 // build the nav
 document.addEventListener('DOMContentLoaded', buildNav())
 document.addEventListener('DOMContentLoaded', addScrollTopButton())
+document.addEventListener('scroll', handleScroll())
 
 // Add class 'active' to section when near top of viewport
 document.addEventListener('scroll', sectionClassChange())
