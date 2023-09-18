@@ -108,7 +108,6 @@ function tabClassChange() {
 //Bonus: hide sections until intersection
 function hideSections() {
   document.querySelectorAll('section').forEach((el, index) => {
-    console.log(el)
     switch (index) {
       case 0:
       case 2:
@@ -122,6 +121,18 @@ function hideSections() {
         el.classList.add('hide-right')
     }
   })
+
+  const callback = (entries, observer) => {
+    entries.forEach((entry) => {
+      console.log(entry)
+      if (!entry.isIntersecting) return
+      const currSectionClass = entry.target.getAttribute('class')
+      const currSection = document.querySelector(`.${currSectionClass}`)
+
+      console.log(currSection)
+    })
+  }
+  callback()
 }
 
 //hides the scroll to top button until a threshold is reached on the footer in relation to the viewport
@@ -186,7 +197,7 @@ document.addEventListener('scroll', sectionClassChange())
 // Scroll to anchor ID using scrollIntoView
 document.addEventListener('click', sectionScroll())
 
-tabClassChange()
+hideSections()
 
 /**
  * End Main Functions

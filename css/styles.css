@@ -127,12 +127,18 @@ section {
 /* Bonus Section styling */
 section.hide-left {
   opacity: 0;
-  transform: translateX(-100);
+  transform: translateX(-100%);
 }
 section.hide-right {
   opacity: 0;
+  transform: translateX(100%);
 }
-
+section.from-left {
+  transition: all 1.5s ease-in-out;
+}
+section.from-right {
+  transition: all 1.5s ease-in-out;
+}
 /* Header Styles */
 .page__header {
   background: #fff;
