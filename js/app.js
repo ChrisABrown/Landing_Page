@@ -96,10 +96,12 @@ function sectionScroll() {
 
 //Adds and removes the ACTIVE_CLASS variable and styling variables from a section dependent on whether sections is intersecting with viewport or not, sections are hidden by default and scrolling down reveals sections
 function sectionClassChange() {
+  //My Session Lead, Hugo suggested the Intersection Observer API over using the getBoundingClientRect function based on his personal experience, I tried both at first but gravitated more to how the IO API was structured
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       let intersecting = entry.isIntersecting
       let target = entry.target
+      //learned this setup from perusing youtube and mdn for guards against random bugs
       if (!intersecting) return
       target.classList.toggle(ACTIVE_CLASS)
       target.firstElementChild.classList.replace('hide-left', 'from-left')
@@ -132,6 +134,7 @@ function tabClassChange() {
   const observer = new IntersectionObserver((entries) => {
     const [entry] = entries
     let target = entry.target
+    //console.logging while adding different properties help with DOM traversing to where I wanted to be
     let nav =
       target.parentElement.parentElement.firstElementChild.firstElementChild
         .firstElementChild.children
@@ -172,6 +175,7 @@ function handleScroll() {
 
 //Bonus: Sets class of navbar dependent on whether scrolling has ended or not through use of setTimeout
 function hideNavBar() {
+  //Researched how to make navbar disappear dependent on scrolling, came across setTimeout each time scrolling stops and using the 'scrollend' event, 'scrollend' event didn't work the way I wanted
   window.onscroll = () => {
     nav.setAttribute('class', 'page__header reappear')
 
