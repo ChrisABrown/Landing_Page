@@ -25,6 +25,17 @@
 const ACTIVE_CLASS = 'your-active-class'
 const sectionBuild = `<div class='landing__container'><h2>New Section</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi fermentum metus faucibus lectus pharetra dapibus. Suspendisse potenti. Aenean aliquam elementum mi, ac euismod augue. Donec eget lacinia ex. Phasellus imperdiet porta orci eget mollis. Sed convallis sollicitudin mauris ac tincidunt. Donec bibendum, nulla eget bibendum consectetur, sem nisi aliquam leo, ut pulvinar quamnunc eu augue. Pellentesque maximus imperdiet elit a pharetra. Duislectus mi, aliquam in mi quis, aliquam porttitor lacus. Morbi atincidunt felis. Sed leo nunc, pharetra et elementum non, faucibusvitae elit. Integer nec libero venenatis libero ultricies molestiesemper in tellus. Sed congue et odio sed euismod.</p><p>Aliquam a convallis justo. Vivamus venenatis, erat eget pulvinargravida, ipsum lacus aliquet velit, vel luctus diam ipsum a diam. Cras eu tincidunt arcu, vitae rhoncus purus. Vestibulum fermentum consectetur porttitor. Suspendisse imperdiet porttitor tortor, egetelementum tortor mollis non. </p></div>`
 
+const button = document.createElement('button')
+let footer = document.querySelector('.page__footer')
+let list = ['btn', 'showBtn']
+let scrollTimer = -1
+let nav = document.querySelector('.page__header')
+let options = {
+  threshold: 0.9,
+}
+let tabs = []
+let lastChild = document.getElementById('section3')
+
 /**
  * End Global Variables
  * Start Helper Functions
@@ -33,7 +44,6 @@ const sectionBuild = `<div class='landing__container'><h2>New Section</h2><p>Lor
 //populate the tabs with dataset from the sections then returning an array holding the completed tabs
 function createTabs() {
   let sections = document.querySelectorAll('section')
-  let tabs = []
   for (let i = 0; i < sections.length; i++) {
     let item = document.createElement('li')
     item.classList.add('menu__link')
@@ -46,7 +56,6 @@ function createTabs() {
 
 //adds section based off num parameter, sets attributes for section and fills it with dummy text
 function addSection(num) {
-  let lastChild = document.getElementById('section3')
   for (let i = 0; i < num; i++) {
     let section = document.createElement('section')
     section.innerHTML = sectionBuild
@@ -67,7 +76,7 @@ function buildNav() {
 //Adds event listener to navbar that listens for a click, then scrolls to the section based of the sections' data-nav matching the text content of the tab
 function sectionScroll() {
   let nav = document.querySelector('#navbar__list')
-  let sections = document.getElementsByTagName('section')
+  let sections = document.querySelectorAll('section')
 
   nav.addEventListener('click', (e) => {
     for (let i = 0; i < nav.children.length; i++) {
@@ -120,21 +129,19 @@ function sectionClassChange() {
 
 //Adds the ACTIVE_CLASS variable to the tab based on matching the tab id with the dataset of the section currently in view
 function tabClassChange() {
-  let options = {
-    root: null,
-    threshold: 0.9,
-  }
   const observer = new IntersectionObserver((entries) => {
     const [entry] = entries
+    let target = entry.target
     let nav =
-      entry.target.parentElement.parentElement.firstElementChild
-        .firstElementChild.firstElementChild.children
-    let dataAnchor = entry.target.dataset.nav
+      target.parentElement.parentElement.firstElementChild.firstElementChild
+        .firstElementChild.children
+    let dataAnchor = target.dataset.nav
     for (let i = 0; i < nav.length; i++) {
+      let classlist = nav[i].classList
       if (nav[i].id === dataAnchor && entry.isIntersecting) {
-        nav[i].classList.toggle(ACTIVE_CLASS)
+        classlist.toggle(ACTIVE_CLASS)
       } else {
-        nav[i].classList.toggle(ACTIVE_CLASS, false)
+        classlist.toggle(ACTIVE_CLASS, false)
       }
     }
   }, options)
@@ -144,13 +151,9 @@ function tabClassChange() {
   })
 }
 
-//Hides the scroll to top button until a threshold is reached on the footer in relation to the viewport
+//Bonus: Hides the scroll to top button until a threshold is reached on the footer in relation to the viewport
 function handleScroll() {
-  let footer = document.querySelector('footer')
   let btn = document.querySelector('.btn')
-  let options = {
-    threshold: 0.9,
-  }
 
   const callback = (entries, observer) => {
     entries.forEach((entry) => {
@@ -167,17 +170,15 @@ function handleScroll() {
   observer.observe(footer)
 }
 
+//Bonus: Sets class of navbar dependent on whether scrolling has ended or not through use of setTimeout
 function hideNavBar() {
-  let scrollTimer = -1
-  let nav = document.querySelector('.page__header')
-
   window.onscroll = () => {
     nav.setAttribute('class', 'page__header reappear')
 
     if (scrollTimer !== -1) clearTimeout(scrollTimer)
     scrollTimer = window.setTimeout(() => {
       disappear()
-    }, 5000)
+    }, 3500)
   }
 
   const disappear = () => {
@@ -185,11 +186,8 @@ function hideNavBar() {
   }
 }
 
-//builds button for scrolling to the top of the screen and adds it to the footer
+//Bonus: Builds button for scrolling to the top of the screen and adds it to the footer
 function addScrollTopButton() {
-  let footer = document.querySelector('.page__footer')
-  let list = ['btn', 'showBtn']
-  const button = document.createElement('button')
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -210,31 +208,22 @@ function addScrollTopButton() {
  * Begin Main Functions
  *
  */
-//Add extra section to bottom of the page
+//Adds extra section to bottom of the page
 document.addEventListener('DOMContentLoaded', addSection(1))
 
-// build the nav
+// Builds the nav and adds scroll to top button to footer
 document.addEventListener('DOMContentLoaded', buildNav())
 document.addEventListener('DOMContentLoaded', addScrollTopButton())
+
+//Scroll to top button hidden by default, transitions up after 90% of footer is in viewport
 document.addEventListener('scroll', handleScroll())
 
-document.body.addEventListener('scrollend', hideNavBar())
+//Hides Navbar when scrolling has stopped after 3.5 secs, navbar transitions in when scrolling starts again
+document.body.addEventListener('scroll', hideNavBar())
 
 // Scroll to anchor ID using scrollIntoView
 document.addEventListener('click', sectionScroll())
 
-// Add class 'active' to section when near top of viewport
+// Add ACTIVE_CLASS to section and tabs when near top of viewport
 document.addEventListener('scroll', sectionClassChange())
 document.addEventListener('scroll', tabClassChange())
-
-/**
- * End Main Functions
- * Begin Events
- *
- */
-
-// Build menu
-
-// Scroll to section on link click
-
-// Set sections as active
