@@ -23,7 +23,6 @@
  *
  */
 const ACTIVE_CLASS = 'your-active-class'
-let isActive = false
 const sectionBuild = `<div class='landing__container'><h2>New Section</h2><p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi fermentum metus faucibus lectus pharetra dapibus. Suspendisse potenti. Aenean aliquam elementum mi, ac euismod augue. Donec eget lacinia ex. Phasellus imperdiet porta orci eget mollis. Sed convallis sollicitudin mauris ac tincidunt. Donec bibendum, nulla eget bibendum consectetur, sem nisi aliquam leo, ut pulvinar quamnunc eu augue. Pellentesque maximus imperdiet elit a pharetra. Duislectus mi, aliquam in mi quis, aliquam porttitor lacus. Morbi atincidunt felis. Sed leo nunc, pharetra et elementum non, faucibusvitae elit. Integer nec libero venenatis libero ultricies molestiesemper in tellus. Sed congue et odio sed euismod.</p><p>Aliquam a convallis justo. Vivamus venenatis, erat eget pulvinargravida, ipsum lacus aliquet velit, vel luctus diam ipsum a diam. Cras eu tincidunt arcu, vitae rhoncus purus. Vestibulum fermentum consectetur porttitor. Suspendisse imperdiet porttitor tortor, egetelementum tortor mollis non. </p></div>`
 
 /**
@@ -39,6 +38,7 @@ function createTabs() {
     let item = document.createElement('li')
     item.classList.add('menu__link')
     item.textContent = sections[i].dataset.nav
+    item.id = sections[i].dataset.nav
     tabs.push(item)
   }
   return tabs
@@ -64,7 +64,7 @@ function buildNav() {
   tabs.forEach((element) => nav.appendChild(element))
 }
 
-//adds event listener to navbar that listens for a click, then scrolls to the section based of the sections' data-nav matching the text content of the tab
+//Adds event listener to navbar that listens for a click, then scrolls to the section based of the sections' data-nav matching the text content of the tab
 function sectionScroll() {
   let nav = document.querySelector('#navbar__list')
   let sections = document.getElementsByTagName('section')
@@ -85,62 +85,71 @@ function sectionScroll() {
   })
 }
 
-//adds and removes the ACTIVE_CLASS variable from a section dependent on whether sections is intersecting with viewport or not
+//Adds and removes the ACTIVE_CLASS variable and styling variables from a section dependent on whether sections is intersecting with viewport or not, sections are hidden by default and scrolling down reveals sections
 function sectionClassChange() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
-      const intersecting = entry.isIntersecting
-      intersecting
-        ? entry.target.classList.add(ACTIVE_CLASS)
-        : entry.target.classList.remove(ACTIVE_CLASS)
+      let intersecting = entry.isIntersecting
+      let target = entry.target
+      if (!intersecting) return
+      target.classList.toggle(ACTIVE_CLASS)
+      target.firstElementChild.classList.replace('hide-left', 'from-left')
+      target.firstElementChild.classList.replace('hide-right', 'from-right')
+      observer.unobserve(target)
     })
+  })
+  document.querySelectorAll('.landing__container').forEach((el, index) => {
+    let classlist = el.classList
+    switch (index) {
+      case 0:
+      case 2:
+        classlist.add('hide-left')
+        break
+      case 1:
+      case 3:
+        classlist.add('hide-right')
+        break
+      default:
+        classlist.add('hide-right')
+    }
   })
   document.querySelectorAll('section').forEach((section) => {
     observer.observe(section)
   })
 }
 
+//Adds the ACTIVE_CLASS variable to the tab based on matching the tab id with the dataset of the section currently in view
 function tabClassChange() {
-  let nav = document.querySelector('#navbar__list')
-  let sections = document.querySelectorAll('section')
-}
-
-//Bonus: hide sections until intersection
-function hideSections() {
-  document.querySelectorAll('section').forEach((el, index) => {
-    switch (index) {
-      case 0:
-      case 2:
-        el.classList.add('hide-left')
-        break
-      case 1:
-      case 3:
-        el.classList.add('hide-right')
-        break
-      default:
-        el.classList.add('hide-right')
-    }
-  })
-
-  const callback = (entries, observer) => {
-    entries.forEach((entry) => {
-      console.log(entry)
-      if (!entry.isIntersecting) return
-      const currSectionClass = entry.target.getAttribute('class')
-      const currSection = document.querySelector(`.${currSectionClass}`)
-
-      console.log(currSection)
-    })
+  let options = {
+    root: null,
+    threshold: 0.9,
   }
-  callback()
+  const observer = new IntersectionObserver((entries) => {
+    const [entry] = entries
+    let nav =
+      entry.target.parentElement.parentElement.firstElementChild
+        .firstElementChild.firstElementChild.children
+    let dataAnchor = entry.target.dataset.nav
+    for (let i = 0; i < nav.length; i++) {
+      if (nav[i].id === dataAnchor && entry.isIntersecting) {
+        nav[i].classList.toggle(ACTIVE_CLASS)
+      } else {
+        nav[i].classList.toggle(ACTIVE_CLASS, false)
+      }
+    }
+  }, options)
+
+  document.querySelectorAll('section').forEach((section) => {
+    observer.observe(section)
+  })
 }
 
-//hides the scroll to top button until a threshold is reached on the footer in relation to the viewport
+//Hides the scroll to top button until a threshold is reached on the footer in relation to the viewport
 function handleScroll() {
   let footer = document.querySelector('footer')
   let btn = document.querySelector('.btn')
   let options = {
-    threshold: 0.8,
+    threshold: 0.9,
   }
 
   const callback = (entries, observer) => {
@@ -156,6 +165,24 @@ function handleScroll() {
 
   let observer = new IntersectionObserver(callback, options)
   observer.observe(footer)
+}
+
+function hideNavBar() {
+  let scrollTimer = -1
+  let nav = document.querySelector('.page__header')
+
+  window.onscroll = () => {
+    nav.setAttribute('class', 'page__header reappear')
+
+    if (scrollTimer !== -1) clearTimeout(scrollTimer)
+    scrollTimer = window.setTimeout(() => {
+      disappear()
+    }, 5000)
+  }
+
+  const disappear = () => {
+    nav.setAttribute('class', 'page__header disappear')
+  }
 }
 
 //builds button for scrolling to the top of the screen and adds it to the footer
@@ -191,13 +218,14 @@ document.addEventListener('DOMContentLoaded', buildNav())
 document.addEventListener('DOMContentLoaded', addScrollTopButton())
 document.addEventListener('scroll', handleScroll())
 
-// Add class 'active' to section when near top of viewport
-document.addEventListener('scroll', sectionClassChange())
+document.body.addEventListener('scrollend', hideNavBar())
 
 // Scroll to anchor ID using scrollIntoView
 document.addEventListener('click', sectionScroll())
 
-hideSections()
+// Add class 'active' to section when near top of viewport
+document.addEventListener('scroll', sectionClassChange())
+document.addEventListener('scroll', tabClassChange())
 
 /**
  * End Main Functions

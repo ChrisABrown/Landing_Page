@@ -92,16 +92,17 @@ section {
   transition: ease 0.3s all;
 }
 
-/* Navbar Active Styles */
+/* Navbar Active Style */
 .navbar__menu .menu__link.your-active-class {
   background: rgba(136, 203, 171, 1);
   text-decoration: underline;
   font-style: italic;
 }
 
+/* Scroll to Top Button Styling */
+
 .btn {
   opacity: 0;
-  transform: translateY(100px);
   transition: all 0.8s ease;
   font-size: 1em;
   position: absolute;
@@ -116,7 +117,6 @@ section {
 
 .showBtn {
   opacity: 1;
-  transform: translateY(0);
 }
 
 .btn:hover {
@@ -125,19 +125,19 @@ section {
   transition: ease 0.7s all;
 }
 /* Bonus Section styling */
-section.hide-left {
+.landing__container.hide-left {
   opacity: 0;
   transform: translateX(-100%);
 }
-section.hide-right {
+.landing__container.hide-right {
   opacity: 0;
   transform: translateX(100%);
 }
-section.from-left {
-  transition: all 1.5s ease-in-out;
+.landing__container.from-left {
+  transition: all 2s ease-in-out;
 }
-section.from-right {
-  transition: all 1.5s ease-in-out;
+.landing__container.from-right {
+  transition: all 2s ease-in-out;
 }
 /* Header Styles */
 .page__header {
@@ -146,6 +146,15 @@ section.from-right {
   top: 0;
   width: 100%;
   z-index: 5;
+}
+.page__header.disappear {
+  opacity: 0;
+  transition: all 1s ease-out;
+}
+
+.page__header.reappear {
+  opacity: 0.8;
+  transition: all 1.5s ease-in;
 }
 
 /* Footer Styles */
