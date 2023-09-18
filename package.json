@@ -8,6 +8,7 @@
     "live-server": ""
   },
   "scripts": {
-    "live": "live-server"
+    "live": "live-server",
+    "lint": "./node_modules/.bin/eslint"
   }
 }

@@ -155,7 +155,7 @@ function tabClassChange() {
 function handleScroll() {
   let btn = document.querySelector('.btn')
 
-  const callback = (entries, observer) => {
+  const callback = (entries) => {
     entries.forEach((entry) => {
       let intersecting = entry.isIntersecting
       if (intersecting) {
