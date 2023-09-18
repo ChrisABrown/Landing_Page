@@ -41,7 +41,7 @@ let lastChild = document.getElementById('section3')
  * Start Helper Functions
  *
  */
-//populate the tabs with dataset from the sections then returning an array holding the completed tabs
+//Populates the tabs with dataset from the sections then returns an array holding the completed tabs
 function createTabs() {
   let sections = document.querySelectorAll('section')
   for (let i = 0; i < sections.length; i++) {
@@ -54,7 +54,7 @@ function createTabs() {
   return tabs
 }
 
-//adds section based off num parameter, sets attributes for section and fills it with dummy text
+//Adds section based off num parameter, sets attributes for section and fills it with dummy text
 function addSection(num) {
   for (let i = 0; i < num; i++) {
     let section = document.createElement('section')
